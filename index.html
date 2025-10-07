@@ -1,257 +1,462 @@
 <!doctype html>
-<html lang="ko" data-theme="light">
+<html lang="ko">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Aura — 미니멀 프리미엄 랜딩</title>
-  <meta name="description" content="애플 느낌의 미니멀하고 세련된 반응형 랜딩 페이지 템플릿" />
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="icon" href="data:," />
+  <title>메일 초안 작성기</title>
+  <meta name="description" content="간단한 입력만으로 빠르게 이메일 초안을 구성할 수 있는 도구" />
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f4f6fb;
+      --card: #ffffff;
+      --accent: #2563eb;
+      --accent-soft: rgba(37, 99, 235, 0.12);
+      --text-strong: #0f172a;
+      --text: #1e293b;
+      --border: #d4d8e4;
+      font-family: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at 20% -20%, rgba(37, 99, 235, 0.18), transparent 55%),
+        radial-gradient(circle at 80% 0%, rgba(14, 165, 233, 0.15), transparent 55%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 32px 20px 12px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.8rem, 2.6vw, 2.8rem);
+      color: var(--text-strong);
+    }
+
+    header p {
+      margin: 0;
+      font-size: 1rem;
+      color: #475569;
+    }
+
+    main {
+      flex: 1;
+      padding: 0 20px 32px;
+    }
+
+    .layout {
+      display: grid;
+      gap: 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 18px;
+      box-shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
+      backdrop-filter: blur(10px);
+      padding: 24px;
+    }
+
+    h2 {
+      margin: 0 0 18px;
+      font-size: 1.25rem;
+      color: var(--text-strong);
+    }
+
+    label {
+      display: block;
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #334155;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    textarea,
+    select {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 12px 14px;
+      font-size: 0.95rem;
+      background-color: rgba(255, 255, 255, 0.8);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      resize: vertical;
+      min-height: 44px;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    textarea {
+      min-height: 120px;
+    }
+
+    .row {
+      display: grid;
+      gap: 16px;
+    }
+
+    .row.two {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .options button,
+    .actions button,
+    .actions .secondary {
+      border-radius: 999px;
+      border: none;
+      padding: 10px 18px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.2s ease;
+    }
+
+    .options button {
+      background: rgba(37, 99, 235, 0.08);
+      color: var(--accent);
+    }
+
+    .options button.active {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 10px 18px rgba(37, 99, 235, 0.2);
+    }
+
+    .actions {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    .actions button.primary {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 18px 30px rgba(37, 99, 235, 0.22);
+    }
+
+    .actions .secondary {
+      background: rgba(15, 23, 42, 0.08);
+      color: var(--text-strong);
+    }
+
+    .actions button:hover,
+    .actions .secondary:hover,
+    .options button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 22px rgba(15, 23, 42, 0.12);
+    }
+
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .output textarea {
+      min-height: 260px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
+    .tips {
+      display: grid;
+      gap: 12px;
+      margin-top: 12px;
+      font-size: 0.9rem;
+      color: #475569;
+    }
+
+    .tips strong {
+      color: var(--text-strong);
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.85rem;
+      color: #64748b;
+      padding: 24px 16px 40px;
+    }
+
+    @media (min-width: 960px) {
+      .layout {
+        grid-template-columns: 1.1fr 0.9fr;
+      }
+    }
+  </style>
 </head>
 <body>
-  <!-- 스크롤 진행 표시 -->
-  <div class="progress" aria-hidden="true"><span></span></div>
-
-  <header class="site-header" role="banner">
-    <div class="container header-inner">
-      <a class="brand" href="#top" aria-label="Aura 홈">
-        <!-- 간단한 추상 로고 (상표 비사용) -->
-        <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
-          <defs>
-            <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
-              <stop offset="0" stop-color="#0ea5e9"/>
-              <stop offset="1" stop-color="#6366f1"/>
-            </linearGradient>
-          </defs>
-          <circle cx="12" cy="12" r="10" fill="url(#g)"/>
-        </svg>
-        <span class="brand-text">Aura</span>
-      </a>
-      <nav class="nav" aria-label="주요">
-        <a href="#product">제품</a>
-        <a href="#features">특장점</a>
-        <a href="#gallery">디자인</a>
-        <a href="#specs">사양</a>
-        <a href="#support">지원</a>
-      </nav>
-      <div class="header-cta">
-        <button class="theme-toggle" aria-label="테마 전환" title="테마 전환">
-          <svg class="icon-sun" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-            <path fill="currentColor" d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12Zm0 4a1 1 0 0 1-1-1v-1.5a1 1 0 1 1 2 0V21a1 1 0 0 1-1 1Zm0-19a1 1 0 0 1 1-1h.5a1 1 0 1 1 0 2H13a1 1 0 0 1-1-1ZM3 13a1 1 0 0 1-1-1v-.5a1 1 0 1 1 2 0V12a1 1 0 0 1-1 1Zm19 0a1 1 0 0 1-1-1v-.5a1 1 0 1 1 2 0V12a1 1 0 0 1-1 1ZM5.05 20.46a1 1 0 0 1-1.41-1.41l1.06-1.06a1 1 0 1 1 1.41 1.41l-1.06 1.06Zm14.3-14.3a1 1 0 0 1-1.41-1.41l1.06-1.06a1 1 0 1 1 1.41 1.41l-1.06 1.06ZM18.95 20.46l-1.06-1.06a1 1 0 0 1 1.41-1.41l1.06 1.06a1 1 0 1 1-1.41 1.41ZM5.05 3.54 6.1 4.6A1 1 0 0 1 4.7 6.01L3.64 4.95A1 1 0 0 1 5.05 3.54Z"/>
-          </svg>
-          <svg class="icon-moon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-            <path fill="currentColor" d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79Z"/>
-          </svg>
-        </button>
-        <a class="btn primary" href="#buy">구매하기</a>
-      </div>
-    </div>
+  <header>
+    <h1>메일 초안 작성기</h1>
+    <p>핵심 정보만 입력하면, 상황에 맞는 이메일 초안을 바로 만들어드립니다.</p>
   </header>
-
-  <main id="top">
-    <!-- Hero -->
-    <section class="hero" aria-label="주요 소개">
-      <div class="container hero-inner">
-        <div class="hero-copy">
-          <h1 class="gradient-text reveal">가볍게, 강력하게.</h1>
-          <p class="lead reveal">
-            넓은 가능성, 놀랍도록 간결한 디자인.
-            눈에 보이는 모든 것이 집중을 돕도록 설계했습니다.
-          </p>
-          <div class="hero-actions reveal">
-            <a class="btn primary" href="#product" aria-label="제품 보러가기">더 알아보기</a>
-            <a class="btn ghost" href="#features" aria-label="특장점 확인">특장점</a>
+  <main>
+    <div class="layout">
+      <section class="card" aria-label="메일 작성 입력 영역">
+        <h2>기본 정보</h2>
+        <div class="row two">
+          <div>
+            <label for="recipient">받는 사람</label>
+            <input id="recipient" type="text" placeholder="홍길동 팀장님" autocomplete="off" />
+          </div>
+          <div>
+            <label for="sender">보내는 사람</label>
+            <input id="sender" type="text" placeholder="김지연 드림" autocomplete="off" />
+          </div>
+        </div>
+        <div class="row two" style="margin-top: 16px;">
+          <div>
+            <label for="subject">메일 제목</label>
+            <input id="subject" type="text" placeholder="프로젝트 진행 관련 공유드립니다" autocomplete="off" />
+          </div>
+          <div>
+            <label for="tone">톤 &amp; 매너</label>
+            <select id="tone" aria-label="메일 톤 선택">
+              <option value="formal" selected>격식 있는</option>
+              <option value="friendly">친근한</option>
+              <option value="urgent">긴급/요청</option>
+            </select>
           </div>
         </div>
 
-        <div class="hero-visual" aria-hidden="true">
-          <!-- 파라락스 장치: CSS/SVG로 만든 디바이스 모형 -->
-          <div class="device parallax" data-parallax-speed="0.25">
-            <div class="device-frame">
-              <div class="device-glow"></div>
-              <div class="device-notch"></div>
-              <div class="device-screen">
-                <div class="screen-gradient"></div>
-              </div>
-              <div class="device-camera">
-                <span></span><span></span><span></span>
-              </div>
-            </div>
+        <h2 style="margin-top: 32px;">핵심 내용</h2>
+        <div class="row">
+          <div>
+            <label for="goal">메일 목적</label>
+            <textarea id="goal" placeholder="예: 다음 주 중간 점검 회의 일정 확정 및 준비 자료 공유" ></textarea>
+          </div>
+          <div>
+            <label for="points">핵심 포인트 (줄바꿈으로 구분)</label>
+            <textarea id="points" placeholder="- 프로젝트 진행 현황
+- 필요 자료 목록
+- 다음 단계 일정"></textarea>
+          </div>
+          <div>
+            <label for="request">추가 요청 사항</label>
+            <textarea id="request" placeholder="예: 3월 5일까지 검토 의견 회신 부탁드립니다"></textarea>
           </div>
         </div>
 
-      </div>
-    </section>
-
-    <!-- 제품 섹션 -->
-    <section id="product" class="product-section section-padding">
-      <div class="container narrow">
-        <h2 class="title-xl reveal">Aura Phone</h2>
-        <p class="muted reveal">
-          간결함과 성능의 균형. 맑은 화면, 깊은 사운드, 오래가는 배터리.
-          매 순간을 더 편안하고 빠르게 만들어 줍니다.
-        </p>
-
-        <div class="highlight-grid">
-          <article class="highlight-card reveal">
-            <div class="icon-wrap">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 5a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5Z"/></svg>
-            </div>
-            <h3>차세대 칩</h3>
-            <p>Neural Engine 탑재, 사진/영상/게임까지 한층 부드럽게.</p>
-            <span class="badge">최대 30%↑ 성능</span>
-          </article>
-
-          <article class="highlight-card reveal">
-            <div class="icon-wrap">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 6a8 8 0 1 1 0 16H6a2 2 0 0 1-2-2v-6a8 8 0 0 1 8-8Z"/></svg>
-            </div>
-            <h3>배터리</h3>
-            <p>하루 종일 넉넉한 사용 시간. 충전은 더 빠르게.</p>
-            <span class="badge">최대 22시간</span>
-          </article>
-
-          <article class="highlight-card reveal">
-            <div class="icon-wrap">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12l-4-3-4 3-4-3-4 3V6Z"/></svg>
-            </div>
-            <h3>프로급 카메라</h3>
-            <p>더 넓게, 더 밝게, 더 선명하게. 언제나 최고의 샷.</p>
-            <span class="badge">48MP</span>
-          </article>
+        <div class="options" aria-label="템플릿 옵션">
+          <button type="button" data-template="follow-up">후속 조치 안내</button>
+          <button type="button" data-template="meeting">회의 일정 조율</button>
+          <button type="button" data-template="thanks">감사의 메일</button>
         </div>
-      </div>
-    </section>
 
-    <!-- 다크 섹션: 영상/모션 느낌 -->
-    <section id="features" class="media-section section-padding" aria-label="특장점">
-      <div class="container wide">
-        <div class="media-wrap reveal">
-          <div class="media-surface" role="img" aria-label="제품의 유려한 조명과 그라데이션 시각화">
-            <div class="gloss"></div>
-          </div>
+        <div class="actions">
+          <button class="secondary" type="button" id="clear">초기화</button>
+          <button class="primary" type="button" id="generate">초안 생성</button>
         </div>
-        <div class="media-copy">
-          <h2 class="title-lg reveal">선명함의 새로운 기준</h2>
-          <p class="muted reveal">
-            최대 1200니트 HDR 밝기, 정확한 색 재현, 섬세한 디테일.
-            영상도, 게임도, 사진도 더 몰입감 있게.
-          </p>
-          <ul class="bullet-list reveal">
-            <li>ProMotion 대응 디스플레이</li>
-            <li>스마트 색상 관리</li>
-            <li>공간 음향 지원</li>
-          </ul>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- 스티키 텍스트 + 스크롤 갤러리 -->
-    <section id="gallery" class="gallery section-padding" aria-label="디자인 갤러리">
-      <div class="container wide gallery-inner">
-        <div class="gallery-text">
-          <h2 class="title-lg sticky">디자인, 모든 순간에 스며들다.</h2>
+      <section class="card output" aria-label="생성된 메일 초안">
+        <div class="result-header">
+          <h2>초안 미리보기</h2>
+          <span class="badge" id="tone-label">톤: 격식 있는</span>
         </div>
-        <div class="gallery-scroller">
-          <figure class="shot reveal">
-            <div class="shot-img"></div>
-            <figcaption>부드러운 곡선, 정교한 마감.</figcaption>
-          </figure>
-          <figure class="shot reveal">
-            <div class="shot-img alt"></div>
-            <figcaption>어느 빛에서도 자연스러운 컬러.</figcaption>
-          </figure>
-          <figure class="shot reveal">
-            <div class="shot-img deep"></div>
-            <figcaption>손에 착 감기는 균형감.</figcaption>
-          </figure>
+        <textarea id="preview" readonly placeholder="초안을 생성하면 이곳에 내용이 표시됩니다."></textarea>
+        <div class="actions" style="justify-content: space-between; margin-top: 16px;">
+          <div class="tips" aria-live="polite" id="tips"></div>
+          <button class="secondary" type="button" id="copy">내용 복사</button>
         </div>
-      </div>
-    </section>
-
-    <!-- 사양 -->
-    <section id="specs" class="specs section-padding" aria-label="기술 사양">
-      <div class="container narrow">
-        <h2 class="title-lg reveal">기술 사양</h2>
-        <div class="spec-grid">
-          <div class="spec-item reveal">
-            <span class="label">칩셋</span>
-            <span class="value">Aura A1 Neural</span>
-          </div>
-          <div class="spec-item reveal">
-            <span class="label">디스플레이</span>
-            <span class="value">6.1" OLED, 120Hz</span>
-          </div>
-          <div class="spec-item reveal">
-            <span class="label">카메라</span>
-            <span class="value">48MP Wide + 12MP Ultra</span>
-          </div>
-          <div class="spec-item reveal">
-            <span class="label">배터리</span>
-            <span class="value">최대 22시간 동영상 재생</span>
-          </div>
-          <div class="spec-item reveal">
-            <span class="label">보안</span>
-            <span class="value">Face ID, Secure Enclave</span>
-          </div>
-          <div class="spec-item reveal">
-            <span class="label">무게</span>
-            <span class="value">174g</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CTA -->
-    <section id="buy" class="cta section-padding" aria-label="구매 CTA">
-      <div class="container narrow cta-inner">
-        <h2 class="title-lg reveal">지금, 새로움을 손에.</h2>
-        <p class="muted reveal">단순함 속에서 더 큰 가능성을 만나보세요.</p>
-        <div class="cta-actions reveal">
-          <a class="btn primary large" href="#" aria-label="지금 구매">지금 구매</a>
-          <a class="btn ghost large" href="#" aria-label="구입 상담">구입 상담</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- 지원 -->
-    <section id="support" class="support section-padding" aria-label="지원">
-      <div class="container narrow">
-        <h2 class="title-md reveal">도움이 필요하신가요?</h2>
-        <p class="muted reveal">채팅, 전화, 방문 수리까지. 가장 편한 방법을 선택하세요.</p>
-        <div class="support-grid">
-          <a class="support-card reveal" href="#">
-            <h3>온라인 채팅</h3>
-            <p>전문 상담사가 즉시 도와드립니다.</p>
-          </a>
-          <a class="support-card reveal" href="#">
-            <h3>전화 상담</h3>
-            <p>제품 선택부터 설정까지, 친절하게.</p>
-          </a>
-          <a class="support-card reveal" href="#">
-            <h3>서비스 센터</h3>
-            <p>공식 서비스로 안심되는 품질.</p>
-          </a>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer" role="contentinfo">
-    <div class="container footer-inner">
-      <p class="small muted">
-        본 사이트는 데모 템플릿입니다. Apple 및 기타 상표는 각 소유자의 자산이며,
-        여기서는 유사한 디자인 감각을 구현하기 위해 참고되었습니다.
-      </p>
-      <nav class="footer-nav" aria-label="하단">
-        <a href="#">개인정보 처리방침</a>
-        <a href="#">이용 약관</a>
-        <a href="#">쿠키 설정</a>
-      </nav>
-      <p class="small">© 2024 Aura. 모든 권리 보유.</p>
+      </section>
     </div>
+  </main>
+  <footer>
+    <span>© 2024 메일 초안 작성기 — 상황별 이메일 작성을 빠르게 도와드립니다.</span>
   </footer>
 
-  <script src="script.js"></script>
+  <script>
+    const options = document.querySelectorAll('.options button');
+    const toneSelect = document.getElementById('tone');
+    const toneLabel = document.getElementById('tone-label');
+    const preview = document.getElementById('preview');
+    const tips = document.getElementById('tips');
+
+    const toneCopy = {
+      formal: {
+        label: '격식 있는',
+        greeting: (recipient) => `${recipient || '안녕하세요'}.`,
+        closing: (sender) => `${sender || '감사합니다.'}\n${sender || ''}`,
+        tips: ['도입부에서 목적을 명확하게 밝히고, 중요한 일정은 강조하세요.', '감사 인사와 함께 회신 기한을 덧붙이면 응답률이 높아집니다.']
+      },
+      friendly: {
+        label: '친근한',
+        greeting: (recipient) => `${recipient || '안녕하세요'} :)`,
+        closing: (sender) => `${sender || '고맙습니다!'}\n${sender || ''}`,
+        tips: ['짧은 안부를 곁들이고, 핵심 내용은 목록으로 정리하면 좋아요.', '마지막에 가벼운 감사 인사나 기대감을 표현해보세요.']
+      },
+      urgent: {
+        label: '긴급/요청',
+        greeting: (recipient) => `${recipient || '안녕하세요'}.`,
+        closing: (sender) => `${sender || '빠른 확인 부탁드립니다.'}\n${sender || ''}`,
+        tips: ['마감 시한과 필요한 조치를 명확하게 기재하세요.', '우선순위가 높은 항목을 상단에 배치하면 메시지가 더 빠르게 전달됩니다.']
+      }
+    };
+
+    const templates = {
+      'follow-up': {
+        subject: '지난 회의 후속 조치 공유드립니다',
+        goal: '지난 회의에서 합의된 후속 조치 진행 상황을 공유드립니다.',
+        points: '- 진행 현황 요약\n- 추가 확인이 필요한 사항\n- 향후 일정 계획',
+        request: '검토 후 의견이 있으시면 이번 주 금요일까지 회신 부탁드립니다.'
+      },
+      'meeting': {
+        subject: '다음 주 회의 일정 조율 요청드립니다',
+        goal: '다음 주 진행 예정인 프로젝트 킥오프 회의 일정을 조율하고자 합니다.',
+        points: '- 참석 가능한 날짜/시간\n- 회의 안건 및 준비 자료\n- 온라인/오프라인 여부',
+        request: '가능한 일정과 안건에 대한 의견을 3월 5일까지 알려주시면 감사하겠습니다.'
+      },
+      'thanks': {
+        subject: '지난 협조에 깊이 감사드립니다',
+        goal: '프로젝트 진행 과정에서 보여주신 적극적인 협조에 감사의 마음을 전하고자 합니다.',
+        points: '- 도움 주신 내용 요약\n- 그로 인해 발생한 긍정적 결과\n- 향후 함께하고 싶은 계획',
+        request: '추가로 필요한 지원이 있으시면 언제든지 말씀 부탁드립니다.'
+      }
+    };
+
+    function setTemplate(key) {
+      const data = templates[key];
+      if (!data) return;
+      document.getElementById('subject').value = data.subject;
+      document.getElementById('goal').value = data.goal;
+      document.getElementById('points').value = data.points;
+      document.getElementById('request').value = data.request;
+      options.forEach(btn => btn.classList.toggle('active', btn.dataset.template === key));
+    }
+
+    function buildList(text) {
+      return text
+        .split(/\n+/)
+        .map(line => line.replace(/^[-•\s]+/, '').trim())
+        .filter(Boolean);
+    }
+
+    function generateDraft() {
+      const recipient = document.getElementById('recipient').value.trim();
+      const sender = document.getElementById('sender').value.trim();
+      const subject = document.getElementById('subject').value.trim();
+      const goal = document.getElementById('goal').value.trim();
+      const request = document.getElementById('request').value.trim();
+      const points = buildList(document.getElementById('points').value);
+      const tone = toneSelect.value;
+
+      toneLabel.textContent = `톤: ${toneCopy[tone].label}`;
+      const greeting = toneCopy[tone].greeting(recipient || '안녕하세요');
+      const closing = toneCopy[tone].closing(sender);
+
+      const bulletText = points.length
+        ? points.map((item, idx) => `${idx + 1}. ${item}`).join('\n')
+        : '';
+
+      const bodyParts = [
+        greeting,
+        '',
+        goal || '메일 드리는 목적을 여기에 입력해주세요.',
+        '',
+        bulletText,
+        request ? `\n${request}` : '',
+        '',
+        closing
+      ];
+
+      const body = bodyParts
+        .filter(part => part !== null && part !== undefined)
+        .join('\n')
+        .replace(/\n{3,}/g, '\n\n')
+        .trim();
+
+      preview.value = `제목: ${subject || '제목을 입력해주세요.'}\n\n${body}`;
+      updateTips(tone);
+    }
+
+    function updateTips(tone) {
+      tips.innerHTML = toneCopy[tone].tips
+        .map(tip => `<div>• <strong>${toneCopy[tone].label}</strong> 톤에서는 ${tip}</div>`)
+        .join('');
+    }
+
+    document.getElementById('generate').addEventListener('click', generateDraft);
+
+    document.getElementById('clear').addEventListener('click', () => {
+      document.querySelectorAll('input, textarea').forEach(el => el.value = '');
+      options.forEach(btn => btn.classList.remove('active'));
+      toneSelect.value = 'formal';
+      toneLabel.textContent = `톤: ${toneCopy.formal.label}`;
+      preview.value = '';
+      tips.innerHTML = '';
+    });
+
+    document.getElementById('copy').addEventListener('click', async () => {
+      if (!preview.value) return;
+      try {
+        await navigator.clipboard.writeText(preview.value);
+        const original = document.getElementById('copy').textContent;
+        document.getElementById('copy').textContent = '복사 완료!';
+        setTimeout(() => {
+          document.getElementById('copy').textContent = original;
+        }, 1600);
+      } catch (err) {
+        alert('클립보드 복사에 실패했습니다.');
+      }
+    });
+
+    toneSelect.addEventListener('change', () => {
+      const tone = toneSelect.value;
+      toneLabel.textContent = `톤: ${toneCopy[tone].label}`;
+      if (preview.value) {
+        generateDraft();
+      } else {
+        updateTips(tone);
+      }
+    });
+
+    options.forEach(btn => {
+      btn.addEventListener('click', () => setTemplate(btn.dataset.template));
+    });
+
+    updateTips('formal');
+  </script>
 </body>
 </html>
